@@ -4,8 +4,8 @@ A shared outreach calendar running on one Cloudflare Worker and D1 database. The
 
 ## Features
 
-- Private workspace with username/password sign-in and HttpOnly sessions.
-- Administrator, editor and viewer access. Editors manage all units; viewers cannot change data.
+- Public calendar and programme/task views, with username/password sign-in and HttpOnly sessions for editing.
+- Administrator, editor and viewer access. Editors manage all units; viewers and signed-out visitors cannot change data.
 - Programme creation and editing, annual repeats, relative preparation tasks, and preservation of original approval templates.
 - Custom task creation, editing, completion and removal.
 - Calendar, task list, search, unit filtering and annual programme overview.
@@ -51,11 +51,11 @@ Create the first administrator on the deployed site with the private setup key. 
 npx wrangler secret delete BOOTSTRAP_TOKEN
 ```
 
-All routes, including API and static files, use the same Worker origin. No Google OAuth, external database, R2 bucket, paid email service, or domain purchase is required. Use the supplied `workers.dev` address.
+All routes, including API and static files, use the same Worker origin. No Google OAuth, external database, R2 bucket, paid email service, or domain purchase is required. The public address is `https://outreach-year-planner.pages.dev`. Pages serves the app against the same D1 database; the Worker keeps the daily backup schedule. `npm run deploy` updates both deployments.
 
 ## Everyday use
 
-1. Sign in and open **Programmes** to populate the calendar. Original programme dates are placeholders.
+1. Open the calendar without signing in. To update data, select **Sign in**, then open **Programmes** to populate the calendar. Original programme dates are placeholders.
 2. Add a programme date and responsible unit. Choose whether it repeats each year.
 3. Optional preparation tasks use `Task name | weeks before programme`, one per line. A negative lead time means follow-up after the programme.
 4. Use **New task** for stand-alone dated work.

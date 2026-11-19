@@ -8,3 +8,5 @@ backups/
 
 .bootstrap-key
 .admin-credentials*
+
+.pages-dist/

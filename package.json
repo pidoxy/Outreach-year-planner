@@ -1,1 +1,18 @@
-{"name":"outreach-planner","version":"1.0.0","private":true,"type":"module","scripts":{"dev":"wrangler dev","test":"node --experimental-sqlite --test","deploy":"wrangler deploy","db:local":"wrangler d1 migrations apply outreach-planner --local","db:remote":"wrangler d1 migrations apply outreach-planner --remote","backup":"node scripts/backup.mjs"},"devDependencies":{"wrangler":"^4.0.0"}}
+{
+  "name": "outreach-planner",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "test": "node --experimental-sqlite --test",
+    "deploy": "node scripts/deploy.mjs",
+    "db:local": "wrangler d1 migrations apply outreach-planner --local",
+    "db:remote": "wrangler d1 migrations apply outreach-planner --remote",
+    "backup": "node scripts/backup.mjs",
+    "build:pages": "node scripts/build-pages.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

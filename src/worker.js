@@ -72,15 +72,16 @@ async function api(req,env){
   // Keep the IP counter so one valid account cannot bypass protection for other accounts.
   await db.prepare('DELETE FROM login_attempts WHERE key=?').bind(keys[1]).run();return issueSession(req,db,u);
  }
- const user=await session(req,db);requireRole(user,ROLES);
+ const user=await session(req,db);
+ if(path==='/api/state'&&req.method==='GET'){
+  const rs=await db.batch([db.prepare('SELECT kind,id,body,version FROM records ORDER BY kind,id'),db.prepare("SELECT value FROM metadata WHERE key='revision'")]);
+  return json({records:rs[0].results.map(r=>({...JSON.parse(r.body),id:r.id,kind:r.kind,version:r.version})),revision:rs[1].results[0].value,user:user?publicUser(user):null});
+ }
+ requireRole(user,ROLES);
  if(path==='/api/logout'&&req.method==='POST'){const token=(req.headers.get('cookie')||'').match(/outreach_session=([^;]+)/)?.[1];if(token)await db.prepare('DELETE FROM sessions WHERE token_hash=?').bind(await sha(token)).run();return json({ok:true},200,{'set-cookie':cookie(req,'',0)});}
  if(path==='/api/password'&&req.method==='POST'){
   const b=await body(req);await rateLimit(req,db,user.username);if(!safeEqual(await hashPassword(String(b.current||''),user.salt),user.password_hash))fail(401,'Current password is incorrect.');
   if(!str(b.password,128)||b.password.length<12)fail(400,'Use at least 12 characters.');const salt=random();await db.batch([db.prepare('UPDATE users SET password_hash=?,salt=? WHERE id=?').bind(await hashPassword(b.password,salt),salt,user.id),db.prepare('DELETE FROM sessions WHERE user_id=?').bind(user.id)]);return issueSession(req,db,user);
- }
- if(path==='/api/state'&&req.method==='GET'){
-  const rs=await db.batch([db.prepare('SELECT kind,id,body,version FROM records ORDER BY kind,id'),db.prepare("SELECT value FROM metadata WHERE key='revision'")]);
-  return json({records:rs[0].results.map(r=>({...JSON.parse(r.body),id:r.id,kind:r.kind,version:r.version})),revision:rs[1].results[0].value,user:publicUser(user)});
  }
  const match=path.match(/^\/api\/records\/(event|task|done)\/(.+)$/);
  if(match&&['PUT','DELETE'].includes(req.method)){

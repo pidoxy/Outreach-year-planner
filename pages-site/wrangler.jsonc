@@ -1,0 +1,7 @@
+{
+ "$schema": "../node_modules/wrangler/config-schema.json",
+ "name": "outreach-year-planner",
+ "compatibility_date": "2026-11-19",
+ "pages_build_output_dir": "../.pages-dist",
+ "d1_databases": [{"binding":"DB","database_name":"outreach-planner","database_id":"bed51b14-50c0-4bec-a922-1971606ee1f5"}]
+}
