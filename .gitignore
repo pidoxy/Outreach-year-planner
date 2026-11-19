@@ -1,0 +1,10 @@
+node_modules/
+.wrangler/
+.dev.vars
+.env*
+backups/
+*.sqlite*
+.DS_Store
+
+.bootstrap-key
+.admin-credentials*

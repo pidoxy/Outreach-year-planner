@@ -1,0 +1,10 @@
+{
+ "$schema": "node_modules/wrangler/config-schema.json",
+ "name": "outreach-year-planner",
+ "main": "src/worker.js",
+ "compatibility_date": "2026-11-19",
+ "workers_dev": true,
+ "triggers": {"crons": ["0 2 * * *"]},
+ "assets": { "directory": "./public", "binding": "ASSETS", "run_worker_first": ["/api/*"] },
+ "d1_databases": [{ "binding": "DB", "database_name": "outreach-planner", "database_id": "bed51b14-50c0-4bec-a922-1971606ee1f5", "migrations_dir": "migrations" }]
+}

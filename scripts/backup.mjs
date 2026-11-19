@@ -1,0 +1,11 @@
+import {mkdir,chmod} from 'node:fs/promises';
+import {spawnSync} from 'node:child_process';
+import path from 'node:path';
+const directory=path.resolve('backups');
+await mkdir(directory,{recursive:true,mode:0o700});
+const output=path.join(directory,'outreach-full-'+new Date().toISOString().replaceAll(':','-')+'.sql');
+const executable=process.platform==='win32'?'wrangler.cmd':'wrangler';
+const result=spawnSync(path.resolve('node_modules/.bin',executable),['d1','export','outreach-planner','--remote','--output',output],{stdio:'inherit'});
+if(result.status!==0)process.exit(result.status||1);
+await chmod(output,0o600);
+console.log('Full database backup saved under the ignored backups/ directory. This includes password hashes; keep it private.');
